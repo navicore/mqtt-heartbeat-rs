@@ -40,7 +40,7 @@ impl Handler<Beat> for Heartbeater {
         let res = self.publisher.send(Report { json });
         Arbiter::spawn(res.then(|res| {
             match res {
-                Ok(result) => println!("Report: {}", result),
+                Ok(result) => println!("Heartbeat Report: {}", result),
                 Err(err) => panic!("Bad report: {}", err),
             }
             future::result(Ok(()))

@@ -10,13 +10,14 @@ extern crate ws;
 use actix::*;
 use futures::{future, Future};
 use heartbeater::{Beat, Heartbeater};
+use publisher::new_client;
 use publisher::Publisher;
 use settings::Settings;
+use std::thread;
+use std::time::Duration;
 mod heartbeater;
 mod publisher;
 mod settings;
-use std::thread;
-use std::time::Duration;
 
 fn beat(addr: Recipient<Beat>) {
     let res = addr.send(Beat());
@@ -31,16 +32,22 @@ fn beat(addr: Recipient<Beat>) {
 }
 
 fn main() {
+    let settings = Settings::new().unwrap();
+    let out_client = settings.out_client;
+    let out_topic = settings.out_topic;
+    let delay_seconds = settings.delay_seconds;
     let system = actix::System::new("test");
 
-    let p_actor = Publisher.start();
+    let p_actor = Publisher {
+        client: new_client(out_client),
+        topic: out_topic,
+    }.start();
     let h_actor = Heartbeater {
         publisher: p_actor.recipient(),
     }.start();
 
-    let settings = Settings::new().unwrap();
     thread::spawn(move || loop {
-        thread::sleep(Duration::from_secs(settings.delay_seconds));
+        thread::sleep(Duration::from_secs(delay_seconds));
         let a = h_actor.clone();
         beat(a.recipient());
     });
