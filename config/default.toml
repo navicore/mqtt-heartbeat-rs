@@ -1,0 +1,7 @@
+out_topic = "heartbeat"
+
+[out_client]
+url = "localhost:1883"
+username = "admin"
+password = "admin"
+tls = false
