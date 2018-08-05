@@ -40,6 +40,7 @@ FROM rust as builder
 
 ENV OPENSSL_INCLUDE_DIR=/opt/openssl/openssl-1.0.2/include
 ENV OPENSSL_LIB_DIR=/opt/openssl/openssl-1.0.2/lib
+ENV OPENSSL_STATIC=yes
 
 COPY . /build/app
 
