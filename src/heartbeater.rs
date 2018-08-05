@@ -1,4 +1,6 @@
 use actix::*;
+use futures::{future, Future};
+use publisher::Report;
 use settings::Settings;
 use std::env;
 
@@ -9,7 +11,9 @@ fn node_name() -> String {
     }
 }
 
-pub struct Heartbeater;
+pub struct Heartbeater {
+    pub publisher: Recipient<Report>,
+}
 pub struct Beat();
 impl Message for Beat {
     type Result = String;
@@ -33,7 +37,16 @@ impl Handler<Beat> for Heartbeater {
             settings.heartbeat_template,
             node_name()
         );
-        println!("{}", json);
+        let res = self.publisher.send(Report { json });
+        Arbiter::spawn(res.then(|res| {
+            match res {
+                Ok(result) => println!("Report: {}", result),
+                Err(err) => panic!("Bad report: {}", err),
+            }
+
+            System::current().stop();
+            future::result(Ok(()))
+        }));
         String::from("ok")
     }
 }
