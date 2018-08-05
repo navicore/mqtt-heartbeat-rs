@@ -13,6 +13,7 @@ pub struct Mqtt {
 pub struct Settings {
     pub out_client: Mqtt,
     pub out_topic: String,
+    pub heartbeat_template: String,
 }
 
 impl Settings {
