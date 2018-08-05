@@ -1,5 +1,6 @@
 out_topic = "heartbeat"
 heartbeat_template = "buzz from"
+delay_seconds = 30
 
 [out_client]
 url = "localhost:1883"

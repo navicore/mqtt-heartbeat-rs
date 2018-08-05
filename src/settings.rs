@@ -14,6 +14,7 @@ pub struct Settings {
     pub out_client: Mqtt,
     pub out_topic: String,
     pub heartbeat_template: String,
+    pub delay_seconds: u64,
 }
 
 impl Settings {

@@ -11,17 +11,14 @@ use actix::*;
 use futures::{future, Future};
 use heartbeater::{Beat, Heartbeater};
 use publisher::Publisher;
+use settings::Settings;
 mod heartbeater;
 mod publisher;
 mod settings;
+use std::thread;
+use std::time::Duration;
 
-fn main() {
-    let system = actix::System::new("test");
-
-    let paddr = Publisher.start();
-    let addr = Heartbeater {
-        publisher: paddr.recipient(),
-    }.start();
+fn beat(addr: Recipient<Beat>) {
     let res = addr.send(Beat());
     Arbiter::spawn(res.then(|res| {
         match res {
@@ -29,8 +26,24 @@ fn main() {
             Err(err) => panic!("Bad beat: {}", err),
         }
 
-        //System::current().stop();
         future::result(Ok(()))
     }));
+}
+
+fn main() {
+    let system = actix::System::new("test");
+
+    let p_actor = Publisher.start();
+    let h_actor = Heartbeater {
+        publisher: p_actor.recipient(),
+    }.start();
+
+    let settings = Settings::new().unwrap();
+    thread::spawn(move || loop {
+        thread::sleep(Duration::from_secs(settings.delay_seconds));
+        let a = h_actor.clone();
+        beat(a.recipient());
+    });
+
     system.run();
 }

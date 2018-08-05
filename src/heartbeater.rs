@@ -43,8 +43,6 @@ impl Handler<Beat> for Heartbeater {
                 Ok(result) => println!("Report: {}", result),
                 Err(err) => panic!("Bad report: {}", err),
             }
-
-            System::current().stop();
             future::result(Ok(()))
         }));
         String::from("ok")
