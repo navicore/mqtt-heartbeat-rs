@@ -4,6 +4,19 @@ use publisher::Report;
 use settings::Settings;
 use std::env;
 
+// API
+pub fn beat(addr: Recipient<Beat>) {
+    let res = addr.send(Beat());
+    Arbiter::spawn(res.then(|res| {
+        match res {
+            Ok(result) => println!("Beat: {}", result),
+            Err(err) => panic!("Bad beat: {}", err),
+        }
+
+        future::result(Ok(()))
+    }));
+}
+
 fn node_name() -> String {
     match env::var("RESIN_DEVICE_NAME_AT_INIT") {
         Ok(val) => val,

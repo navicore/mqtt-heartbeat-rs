@@ -8,8 +8,7 @@ extern crate netopt;
 extern crate serde;
 extern crate ws;
 use actix::*;
-use futures::{future, Future};
-use heartbeater::{Beat, Heartbeater};
+use heartbeater::{beat, Heartbeater};
 use publisher::new_client;
 use publisher::Publisher;
 use settings::Settings;
@@ -19,24 +18,12 @@ mod heartbeater;
 mod publisher;
 mod settings;
 
-fn beat(addr: Recipient<Beat>) {
-    let res = addr.send(Beat());
-    Arbiter::spawn(res.then(|res| {
-        match res {
-            Ok(result) => println!("Beat: {}", result),
-            Err(err) => panic!("Bad beat: {}", err),
-        }
-
-        future::result(Ok(()))
-    }));
-}
-
 fn main() {
     let settings = Settings::new().unwrap();
     let out_client = settings.out_client;
     let out_topic = settings.out_topic;
     let delay_seconds = settings.delay_seconds;
-    let system = actix::System::new("test");
+    let system = actix::System::new("heartbeat");
 
     let p_actor = Publisher {
         client: new_client(out_client),
