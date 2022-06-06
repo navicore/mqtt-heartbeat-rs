@@ -11,7 +11,7 @@ dependencies = [
  "actix_derive",
  "bitflags 1.0.3",
  "bytes",
- "crossbeam-channel",
+ "crossbeam-channel 0.2.6",
  "failure",
  "fnv",
  "futures",
@@ -59,6 +59,12 @@ checksum = "a1e964f9e24d588183fcb43503abda40d288c8657dfc27311516ce2f05675aef"
 dependencies = [
  "nodrop",
 ]
+
+[[package]]
+name = "autocfg"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "backtrace"
@@ -171,15 +177,25 @@ dependencies = [
 
 [[package]]
 name = "crossbeam-channel"
-version = "0.2.4"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c0a94250b0278d7fc5a894c3d276b11ea164edc8bf8feb10ca1ea517b44a649"
+checksum = "7b85741761b7f160bc5e7e0c14986ef685b7f8bf9b7ad081c60c604bb4649827"
 dependencies = [
- "crossbeam-epoch 0.5.2",
+ "crossbeam-epoch 0.6.1",
  "crossbeam-utils 0.5.0",
  "parking_lot",
  "rand 0.5.4",
  "smallvec",
+]
+
+[[package]]
+name = "crossbeam-channel"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b153fe7cbef478c567df0f972e02e6d736db11affe43dfc9c56a9374d1adfb87"
+dependencies = [
+ "crossbeam-utils 0.7.2",
+ "maybe-uninit",
 ]
 
 [[package]]
@@ -208,13 +224,13 @@ dependencies = [
 
 [[package]]
 name = "crossbeam-epoch"
-version = "0.5.2"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30fecfcac6abfef8771151f8be4abc9e4edc112c2bcb233314cafde2680536e9"
+checksum = "2449aaa4ec7ef96e5fb24db16024b935df718e9ae1cec0a1e68feeca2efca7b8"
 dependencies = [
  "arrayvec",
  "cfg-if",
- "crossbeam-utils 0.5.0",
+ "crossbeam-utils 0.6.6",
  "lazy_static 1.1.0",
  "memoffset",
  "scopeguard",
@@ -234,6 +250,27 @@ name = "crossbeam-utils"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "677d453a17e8bd2b913fa38e8b9cf04bcdbb5be790aa294f2389661d72036015"
+
+[[package]]
+name = "crossbeam-utils"
+version = "0.6.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "04973fa96e96579258a5091af6003abde64af786b860f18622b82e026cca60e6"
+dependencies = [
+ "cfg-if",
+ "lazy_static 1.1.0",
+]
+
+[[package]]
+name = "crossbeam-utils"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3c7c73a2d1e9fc0886a08b93e98eb643461230d5f1925e4036204d5f2e261a8"
+dependencies = [
+ "autocfg",
+ "cfg-if",
+ "lazy_static 1.1.0",
+]
 
 [[package]]
 name = "dbghelp-sys"
@@ -580,7 +617,7 @@ version = "0.1.0"
 dependencies = [
  "actix",
  "config",
- "crossbeam-channel",
+ "crossbeam-channel 0.4.4",
  "futures",
  "mqtt3",
  "mqttc",
